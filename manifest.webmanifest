@@ -1,0 +1,30 @@
+{
+  "id": "/savoria/",
+  "name": "SavoRia — Apprendre, jouer, découvrir",
+  "short_name": "SavoRia",
+  "description": "Des jeux éducatifs gratuits pour apprendre à son rythme.",
+  "lang": "fr",
+  "start_url": "/savoria/",
+  "scope": "/savoria/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "background_color": "#f7f9ff",
+  "theme_color": "#247cff",
+  "icons": [
+    {
+      "src": "./icons/savoria.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/savoria-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
