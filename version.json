@@ -1,5 +1,5 @@
 {
-  "version": "2.0.1",
+  "version": "2.1.0",
   "released": "2026-10-17",
-  "notes": "Géographie : carte muette par défaut, mode découverte distinct et suppression des libellés en quiz."
+  "notes": "Géographie mobile plein écran, réponse contextuelle, sélecteur compact ; ajustements Français."
 }
