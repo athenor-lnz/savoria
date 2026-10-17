@@ -15,16 +15,16 @@
   "theme_color": "#247cff",
   "icons": [
     {
-      "src": "./icons/savoria.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "./icons/savoria-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icons/savoria-maskable.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
+      "src": "./icons/savoria-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
