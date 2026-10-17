@@ -1,5 +1,5 @@
 {
-  "version": "2.2.0",
+  "version": "2.2.1",
   "released": "2026-10-17",
-  "notes": "Géographie : configuration distincte, carte visible et réponse compacte sans défilement."
+  "notes": "Localisation sans surlignage de réponse, encarts ultramarins anonymisés pendant le quiz, messages réinitialisés."
 }
