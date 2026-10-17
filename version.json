@@ -1,5 +1,5 @@
 {
-  "version": "1.8.0",
+  "version": "2.0.0",
   "released": "2026-10-17",
-  "notes": "Mathématiques, géographie, algorithmique et premiers exercices de français."
+  "notes": "Refonte initiale : quiz géographiques sans libellés, recherche de réponses, géographie mobile, correction des textes français."
 }
