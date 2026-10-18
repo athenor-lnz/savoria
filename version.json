@@ -1,5 +1,5 @@
 {
-  "version": "2.2.1",
-  "released": "2026-10-17",
-  "notes": "Localisation sans surlignage de réponse, encarts ultramarins anonymisés pendant le quiz, messages réinitialisés."
+  "version": "2.2.2",
+  "released": "2026-10-18",
+  "notes": "Calcul mental : aucune opération répétée au cours d'une même partie."
 }
