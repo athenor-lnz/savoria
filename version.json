@@ -1,5 +1,5 @@
 {
-  "version": "2.2.2",
-  "released": "2026-10-18",
-  "notes": "Calcul mental : aucune opération répétée au cours d'une même partie."
+  "version": "3.1.0",
+  "released": "2026-10-27",
+  "notes": "Robot aventure : 30 niveaux, labyrinthes aléatoires, clés, portes, étoiles, eau et programmation conditionnelle. 10 exercices de logique et 15 leçons Python."
 }
