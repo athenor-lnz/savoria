@@ -27,7 +27,7 @@ button,input,select{font:inherit}button{cursor:pointer;transition:transform .12s
 .levels button:disabled{opacity:.35;cursor:not-allowed}
 .grid{display:grid;gap:5px;max-width:410px;margin:18px auto}
 .cell{aspect-ratio:1;display:grid;place-items:center;border-radius:9px;background:var(--soft);font-size:clamp(17px,3vw,28px)}
-.robot-token{display:flex;align-items:center;justify-content:center;gap:1px;animation:hop .17s ease-out}.robot-token b{font-size:.55em;color:#235dcc}@keyframes hop{0%{transform:translateY(3px) scale(.90)}60%{transform:translateY(-3px) scale(1.07)}100%{transform:translateY(0) scale(1)}}.cell.wall{background:#71829a}.cell.target{background:#d7f4de}.cell.path{outline:2px solid #acd0fc;outline-offset:-2px}
+.robot-token{display:flex;align-items:center;justify-content:center;gap:1px;animation:hop .17s ease-out}.robot-token b{font-size:.55em;color:#235dcc}@keyframes hop{0%{transform:translateY(3px) scale(.90)}60%{transform:translateY(-3px) scale(1.07)}100%{transform:translateY(0) scale(1)}}.cell.hazard{background:#c7ecff}.cell.door{background:#ffe6b1}.cell.key{background:#fff1b6}.cell.wall{background:#71829a}.cell.target{background:#d7f4de}.cell.path{outline:2px solid #acd0fc;outline-offset:-2px}
 .controls{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .controls button,.actions button{border:1px solid var(--border);background:var(--soft);color:var(--ink);padding:11px 8px;border-radius:12px;font-weight:700}
 .commands{display:flex;flex-wrap:wrap;gap:6px;min-height:65px;padding:10px;background:var(--soft);border-radius:12px;margin:12px 0}
@@ -43,21 +43,21 @@ kbd{padding:2px 5px;background:var(--soft);border-radius:5px}
 [hidden]{display:none!important}
 @media(max-width:750px){.layout{grid-template-columns:1fr}.card{padding:15px}.hero{padding:18px}.tabs button{flex:1}}
 </style></head>
-<body><main><header><a href="../" aria-label="Retour à l'accueil">←</a><h1>Algorithmique & Python</h1><span class="version">v3.0 — parcours</span></header>
+<body><main><header><a href="../" aria-label="Retour à l'accueil">←</a><h1>Algorithmique & Python</h1><span class="version">v3.1 — Robot aventure</span></header>
 <div class="hero"><h2>🧠 Apprends en expérimentant</h2><p>Programme ton robot, découvre les conditions et écris tes premières instructions Python. Chaque défi se débloque à ton rythme.</p></div>
 <nav class="tabs" aria-label="Choisir une activité"><button class="active" data-tab="robot">🤖 Robot</button><button data-tab="logique">🔀 Logique</button><button data-tab="python">🐍 Python</button></nav>
 <section id="robot" class="section">
 <div class="layout">
 <div class="card"><div class="topline"><h3>🗺️ Mission du robot</h3><span class="pill" id="levelBadge"></span></div>
 <p class="muted small" id="mission"></p><div class="progress"><div id="robotProgress"></div></div><div class="levels" id="levels"></div>
-<div class="grid" id="grid" role="img" aria-label="Labyrinthe du robot"></div>
+<div class="grid" id="grid" role="img" aria-label="Labyrinthe du robot"></div><p class="small muted" id="worldLegend">🤖 Robot · 🏁 Arrivée · 🧱 Mur · 🔑 Clé · 🚪 Porte · ⭐ Étoile · 🌊 Eau</p>
 <div class="status" id="robotStatus" aria-live="polite"></div>
 <div class="actions"><button id="shuffle">🎲 Autre parcours</button><button id="nextLevel" class="primary" hidden>Défi suivant →</button></div></div>
 <div class="card"><h3>🧩 Programme ses mouvements</h3><p class="muted small">Le robot commence vers la droite ➡️. Ajoute des ordres, puis lance le programme. Un mur arrête le robot.</p>
-<div class="controls"><button data-cmd="F">⬆ Avancer</button><button data-cmd="L">↶ Gauche</button><button data-cmd="R">↷ Droite</button><button data-cmd="B">×2 Dernier</button><button data-cmd="T">×3 Dernier</button><button data-cmd="U">↩ Annuler</button></div>
+<div class="controls"><button data-cmd="F">⬆ Avancer</button><button data-cmd="L">↶ Gauche</button><button data-cmd="R">↷ Droite</button><button data-cmd="B">×2 Dernier</button><button data-cmd="T">×3 Dernier</button><button data-cmd="U">↩ Annuler</button><button data-cmd="W">🔁 Répéter ×5</button><button data-cmd="C">🔍 Si libre : avancer</button></div>
 <div id="commands" class="commands" aria-label="Programme en cours"></div>
 <div class="actions"><button id="run" class="primary">▶ Exécuter</button><button id="resetRobot">↺ Repartir</button><button id="clear">Effacer les ordres</button></div>
-<p class="small muted">💡 Astuce : contourne les cases grises. Les boutons ×2 et ×3 répètent le dernier ordre. Plus tu avances, plus le labyrinthe grandit.</p>
+<p class="small muted">💡 Programme d’abord la route : le robot exécute les instructions dans l’ordre. 🔁 répète le dernier mouvement 5 fois, 🔍 avance uniquement si la case devant est libre. Ramasse la clé avant de passer la porte.</p><label for="speed">Vitesse du robot</label><select id="speed"><option value="420">Lent</option><option value="240" selected>Normal</option><option value="90">Rapide</option></select><div class="actions"><button id="hint">💡 Indice</button><button id="solution">🧭 Montrer un trajet</button></div>
 <p class="small muted" id="robotCount"></p></div></div></section>
 <section id="logique" class="section card" hidden><h3>🔀 Les conditions et la logique</h3><p class="muted">Prédit ce que décide un programme. Des exemples concrets t'aident à comprendre les règles.</p>
 <div class="progress"><div id="logicProgress"></div></div><div class="lessonNav"><button id="logicPrev">← Précédent</button><span id="logicCount"></span><button id="logicNext">Suivant →</button></div>
@@ -73,28 +73,34 @@ document.documentElement.dataset.theme=prefs.theme==='dark'?'dark':prefs.theme==
 const $=id=>document.getElementById(id);
 const save=(key,val)=>{try{localStorage.setItem('savoria-algo-'+key,JSON.stringify(val))}catch(e){}};
 const load=(key,def)=>{try{const x=JSON.parse(localStorage.getItem('savoria-algo-'+key));return x===null?def:x}catch(e){return def}};
-let unlocked=Math.max(1,Math.min(30,Number(load('unlocked',1))||1)), level=unlocked, maze=[], size=5, pos=[0,0],dir=1,cmds=[],busy=false,completed=load('completed',[]);
-const totalLevels=30, dirs=[[0,-1],[1,0],[0,1],[-1,0]],arrows=['⬆️','➡️','⬇️','⬅️'],names={F:'↑',L:'↶',R:'↷'};
-const pause=t=>new Promise(r=>setTimeout(r,t));const key=(x,y)=>x+','+y;
-function routeExists(blocked,n){let queue=[[0,0]],seen=new Set(['0,0']);for(let i=0;i<queue.length;i++){const [x,y]=queue[i];if(x===n-1&&y===n-1)return true;for(const [dx,dy] of dirs){let nx=x+dx,ny=y+dy,k=key(nx,ny);if(nx>=0&&ny>=0&&nx<n&&ny<n&&!blocked.has(k)&&!seen.has(k)){seen.add(k);queue.push([nx,ny])}}}return false}
-function generate(){size=Math.min(9,5+Math.floor((level-1)/6));let density=Math.min(.29,.07+(level-1)*.008),blocked;
-for(let attempt=0;attempt<300;attempt++){blocked=new Set();for(let y=0;y<size;y++)for(let x=0;x<size;x++)if((x||y)&&(x!==size-1||y!==size-1)&&Math.random()<density)blocked.add(key(x,y));if(routeExists(blocked,size))break;}
-if(!routeExists(blocked,size))blocked=new Set();maze=blocked;pos=[0,0];dir=1;cmds=[];draw();$('robotStatus').textContent='';$('nextLevel').hidden=true;
-$('mission').textContent='Atteins le drapeau 🏁 en évitant '+blocked.size+' obstacle(s). Grille '+size+' × '+size+'.';
+let unlocked=Math.max(1,Math.min(30,Number(load('unlocked',1))||1)),level=unlocked,size=5,maze=new Set(),water=new Set(),stars=new Set(),keyCell='',doorCell='',pos=[0,0],dir=1,hasKey=false,cmds=[],busy=false,completed=load('completed',[]);
+const totalLevels=30,dirs=[[0,-1],[1,0],[0,1],[-1,0]],arrows=['⬆️','➡️','⬇️','⬅️'],names={F:'↑',L:'↶',R:'↷',C:'🔍↑'};
+const pause=t=>new Promise(r=>setTimeout(r,t)),key=(x,y)=>x+','+y;
+function walkable(x,y){return x>=0&&y>=0&&x<size&&y<size&&!maze.has(key(x,y))&&!water.has(key(x,y))&&(key(x,y)!==doorCell||hasKey)}
+function shortestPath(start=[0,0],goal=[size-1,size-1],blockedDoor=false){let q=[start],seen=new Set([key(...start)]),parent=new Map();for(let i=0;i<q.length;i++){let [x,y]=q[i];if(x===goal[0]&&y===goal[1]){let route=[[x,y]],k=key(x,y);while(parent.has(k)){let p=parent.get(k);route.unshift(p);k=key(...p)}return route}
+for(const [dx,dy] of dirs){let nx=x+dx,ny=y+dy,k=key(nx,ny);if(nx<0||ny<0||nx>=size||ny>=size||maze.has(k)||water.has(k)||(blockedDoor&&k===doorCell)||seen.has(k))continue;seen.add(k);parent.set(k,[x,y]);q.push([nx,ny])}}return null}
+function generate(){size=Math.min(10,5+Math.floor((level-1)/5));let density=Math.min(.32,.08+level*.009),path=null;doorCell='';keyCell='';water=new Set();stars=new Set();
+for(let attempt=0;attempt<500;attempt++){maze=new Set();for(let y=0;y<size;y++)for(let x=0;x<size;x++)if((x||y)&&(x!==size-1||y!==size-1)&&Math.random()<density)maze.add(key(x,y));path=shortestPath();if(path&&path.length>=size*2-1)break}
+if(!path){maze=new Set();path=shortestPath()}
+if(level>=6&&path.length>=7){let d=Math.floor(path.length*.7),k=Math.floor(path.length*.32);doorCell=key(...path[d]);keyCell=key(...path[k]);}
+if(level>=12){const route=new Set(path.map(p=>key(...p)));for(let y=0;y<size;y++)for(let x=0;x<size;x++){let k=key(x,y);if(!route.has(k)&&!maze.has(k)&&Math.random()<.1)water.add(k)}}
+if(level>=3){let alternatives=path.slice(2,-2).filter(p=>key(...p)!==doorCell&&key(...p)!==keyCell);if(alternatives.length)stars.add(key(...alternatives[Math.floor(Math.random()*alternatives.length)]))}
+pos=[0,0];dir=1;hasKey=false;cmds=[];busy=false;draw();msg('');$('nextLevel').hidden=true;let mechanics=level>=12?' Évite aussi l’eau 🌊.':level>=6?' Récupère la clé 🔑 pour ouvrir la porte 🚪.':'';
+$('mission').textContent='Rejoins le drapeau 🏁 sur une grille '+size+' × '+size+'.'+mechanics;
 $('levelBadge').textContent='Niveau '+level+' / '+totalLevels;$('robotProgress').style.width=(completed.length/totalLevels*100)+'%';drawLevels()}
 function drawLevels(){let out='';for(let i=1;i<=totalLevels;i++)out+='<button data-level="'+i+'" '+(i>unlocked?'disabled ':'')+(i===level?'class="active" ':'')+'title="Niveau '+i+'">'+(completed.includes(i)?'✓':i)+'</button>';$('levels').innerHTML=out}
-function draw(){let out='';for(let y=0;y<size;y++)for(let x=0;x<size;x++){let p=pos[0]===x&&pos[1]===y,t=x===size-1&&y===size-1,w=maze.has(key(x,y));out+='<div class="cell '+(w?'wall ':'')+(t?'target':'')+'">'+(p?'<span class="robot-token">🤖<b>'+arrows[dir]+'</b></span>':t?'🏁':w?'🧱':'')+'</div>'}
-$('grid').style.gridTemplateColumns='repeat('+size+',1fr)';$('grid').innerHTML=out;
-$('commands').innerHTML=cmds.map((c,i)=>'<span title="Instruction '+(i+1)+'">'+names[c]+'</span>').join('')||'<span class="muted">Tes instructions apparaîtront ici.</span>';
-$('robotCount').textContent=cmds.length+' instruction(s)';}
+function draw(){let out='';for(let y=0;y<size;y++)for(let x=0;x<size;x++){let k=key(x,y),p=pos[0]===x&&pos[1]===y,t=x===size-1&&y===size-1,w=maze.has(k),h=water.has(k),d=k===doorCell,kk=k===keyCell,star=stars.has(k);out+='<div class="cell '+(w?'wall ':h?'hazard ':d?'door ':kk?'key ':'')+(t?'target':'')+'">'+(p?'<span class="robot-token">🤖<b>'+arrows[dir]+'</b></span>':t?'🏁':w?'🧱':h?'🌊':d?'🚪':kk?'🔑':star?'⭐':'')+'</div>'}
+$('grid').style.gridTemplateColumns='repeat('+size+',1fr)';$('grid').innerHTML=out;$('commands').innerHTML=cmds.map((c,i)=>'<span title="Instruction '+(i+1)+'">'+names[c]+'</span>').join('')||'<span class="muted">Construis ton programme ici.</span>';$('robotCount').textContent=cmds.length+' instruction(s) · '+(hasKey?'🔑 Clé récupérée':'') }
 function msg(t,ok=false){$('robotStatus').textContent=t;$('robotStatus').classList.toggle('success',ok)}
-document.getElementById('levels').onclick=e=>{const b=e.target.closest('button[data-level]');if(b&&!busy){level=Number(b.dataset.level);generate()}};
-document.querySelectorAll('[data-cmd]').forEach(b=>b.onclick=()=>{if(busy)return;let c=b.dataset.cmd;if(c==='U')cmds.pop();else if(c==='B'||c==='T'){let copies=c==='B'?1:2;if(cmds.length)for(let i=0;i<copies&&cmds.length<150;i++)cmds.push(cmds[cmds.length-1])}else if(cmds.length<150)cmds.push(c);draw()});
+$('levels').onclick=e=>{const b=e.target.closest('button[data-level]');if(b&&!busy){level=Number(b.dataset.level);generate()}};
+document.querySelectorAll('[data-cmd]').forEach(b=>b.onclick=()=>{if(busy)return;let c=b.dataset.cmd;if(c==='U')cmds.pop();else if(['B','T','W'].includes(c)){let copies={B:1,T:2,W:4}[c];if(cmds.length&&cmds[cmds.length-1]!=='C')for(let i=0;i<copies&&cmds.length<200;i++)cmds.push(cmds[cmds.length-1])}else if(cmds.length<200)cmds.push(c);draw()});
 $('clear').onclick=()=>{if(!busy){cmds=[];draw();msg('Programme effacé.')}};
-$('resetRobot').onclick=()=>{if(!busy){pos=[0,0];dir=1;draw();msg('Robot remis au départ.')}};
+$('resetRobot').onclick=()=>{if(!busy){pos=[0,0];dir=1;hasKey=false;draw();msg('Robot remis au départ.')}};
 $('shuffle').onclick=()=>{if(!busy)generate()};
 $('nextLevel').onclick=()=>{if(level<totalLevels&&!busy){level++;generate()}};
-$('run').onclick=async()=>{if(busy)return;if(!cmds.length){msg('Ajoute au moins une instruction.');return}busy=true;pos=[0,0];dir=1;draw();msg('Exécution en cours…');for(const c of cmds){await pause(170);if(c==='L')dir=(dir+3)%4;if(c==='R')dir=(dir+1)%4;if(c==='F'){let nx=pos[0]+dirs[dir][0],ny=pos[1]+dirs[dir][1];if(nx<0||ny<0||nx>=size||ny>=size||maze.has(key(nx,ny))){msg('🧱 Obstacle rencontré : essaie une autre séquence.');busy=false;draw();return}pos=[nx,ny]}draw();if(pos[0]===size-1&&pos[1]===size-1){if(!completed.includes(level)){completed.push(level);save('completed',completed)}unlocked=Math.max(unlocked,Math.min(totalLevels,level+1));save('unlocked',unlocked);msg('🎉 Bravo ! Mission réussie. Niveau suivant débloqué !',true);$('nextLevel').hidden=level===totalLevels;drawLevels();$('robotProgress').style.width=(completed.length/totalLevels*100)+'%';busy=false;return}}
+$('hint').onclick=()=>{let p=shortestPath(pos);msg(p?'💡 Il reste au moins '+(p.length-1)+' déplacement(s) sur un trajet possible.':'💡 Cherche la clé pour ouvrir le chemin.')};
+$('solution').onclick=()=>{let p=shortestPath(pos);if(!p){msg('La porte est fermée : cherche la clé.');return}let steps=[];let d=dir;for(let i=1;i<p.length;i++){let [x,y]=p[i-1],[nx,ny]=p[i],want=dirs.findIndex(([dx,dy])=>x+dx===nx&&y+dy===ny);while(d!==want){steps.push('R');d=(d+1)%4}steps.push('F')}msg('🧭 Trajet suggéré : '+steps.map(c=>names[c]).join(' ')+' (depuis la position actuelle)')};
+$('run').onclick=async()=>{if(busy)return;if(!cmds.length){msg('Ajoute au moins une instruction.');return}busy=true;pos=[0,0];dir=1;hasKey=false;draw();msg('Le robot démarre…');for(const c of cmds){await pause(Number($('speed').value)||240);if(c==='L')dir=(dir+3)%4;if(c==='R')dir=(dir+1)%4;if(c==='F'||c==='C'){let nx=pos[0]+dirs[dir][0],ny=pos[1]+dirs[dir][1];if(!walkable(nx,ny)){if(c==='F'){msg(key(nx,ny)===doorCell?'🚪 Porte fermée : récupère d’abord la clé !':'⛔ Chemin bloqué ! Change ton programme.');busy=false;draw();return}}else{pos=[nx,ny];let k=key(nx,ny);if(k===keyCell){hasKey=true;keyCell='';msg('🔑 Clé récupérée !')}if(stars.has(k)){stars.delete(k);msg('⭐ Étoile ramassée !')}}}draw();if(pos[0]===size-1&&pos[1]===size-1){if(!completed.includes(level)){completed.push(level);save('completed',completed)}unlocked=Math.max(unlocked,Math.min(totalLevels,level+1));save('unlocked',unlocked);msg('🎉 Bravo ! Mission réussie. Niveau suivant débloqué !',true);$('nextLevel').hidden=level===totalLevels;drawLevels();$('robotProgress').style.width=(completed.length/totalLevels*100)+'%';busy=false;return}}
 msg('Le robot n’a pas atteint le drapeau. Modifie le programme !');busy=false};
 const logic=[
 ['Si… alors','On teste une température de -2 °C. Quel message sera affiché ?','temperature = -2\nif temperature < 0:\n    print("Gel")\nelse:\n    print("Pas de gel")',['Gel','Pas de gel'],0],
