@@ -27,7 +27,7 @@ button,input,select{font:inherit}button{cursor:pointer;transition:transform .12s
 .levels button:disabled{opacity:.35;cursor:not-allowed}
 .grid{display:grid;gap:5px;max-width:410px;margin:18px auto}
 .cell{aspect-ratio:1;display:grid;place-items:center;border-radius:9px;background:var(--soft);font-size:clamp(17px,3vw,28px)}
-.cell.wall{background:#71829a}.cell.target{background:#d7f4de}.cell.path{outline:2px solid #acd0fc;outline-offset:-2px}
+.robot-token{display:flex;align-items:center;justify-content:center;gap:1px;animation:hop .17s ease-out}.robot-token b{font-size:.55em;color:#235dcc}@keyframes hop{0%{transform:translateY(3px) scale(.90)}60%{transform:translateY(-3px) scale(1.07)}100%{transform:translateY(0) scale(1)}}.cell.wall{background:#71829a}.cell.target{background:#d7f4de}.cell.path{outline:2px solid #acd0fc;outline-offset:-2px}
 .controls{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .controls button,.actions button{border:1px solid var(--border);background:var(--soft);color:var(--ink);padding:11px 8px;border-radius:12px;font-weight:700}
 .commands{display:flex;flex-wrap:wrap;gap:6px;min-height:65px;padding:10px;background:var(--soft);border-radius:12px;margin:12px 0}
@@ -83,7 +83,7 @@ if(!routeExists(blocked,size))blocked=new Set();maze=blocked;pos=[0,0];dir=1;cmd
 $('mission').textContent='Atteins le drapeau 🏁 en évitant '+blocked.size+' obstacle(s). Grille '+size+' × '+size+'.';
 $('levelBadge').textContent='Niveau '+level+' / '+totalLevels;$('robotProgress').style.width=(completed.length/totalLevels*100)+'%';drawLevels()}
 function drawLevels(){let out='';for(let i=1;i<=totalLevels;i++)out+='<button data-level="'+i+'" '+(i>unlocked?'disabled ':'')+(i===level?'class="active" ':'')+'title="Niveau '+i+'">'+(completed.includes(i)?'✓':i)+'</button>';$('levels').innerHTML=out}
-function draw(){let out='';for(let y=0;y<size;y++)for(let x=0;x<size;x++){let p=pos[0]===x&&pos[1]===y,t=x===size-1&&y===size-1,w=maze.has(key(x,y));out+='<div class="cell '+(w?'wall ':'')+(t?'target':'')+'">'+(p?arrows[dir]:t?'🏁':w?'🧱':'')+'</div>'}
+function draw(){let out='';for(let y=0;y<size;y++)for(let x=0;x<size;x++){let p=pos[0]===x&&pos[1]===y,t=x===size-1&&y===size-1,w=maze.has(key(x,y));out+='<div class="cell '+(w?'wall ':'')+(t?'target':'')+'">'+(p?'<span class="robot-token">🤖<b>'+arrows[dir]+'</b></span>':t?'🏁':w?'🧱':'')+'</div>'}
 $('grid').style.gridTemplateColumns='repeat('+size+',1fr)';$('grid').innerHTML=out;
 $('commands').innerHTML=cmds.map((c,i)=>'<span title="Instruction '+(i+1)+'">'+names[c]+'</span>').join('')||'<span class="muted">Tes instructions apparaîtront ici.</span>';
 $('robotCount').textContent=cmds.length+' instruction(s)';}
@@ -128,7 +128,7 @@ const py=[
 let logicIndex=0,pyIndex=0,logicDone=load('logicDone',[]),pyDone=load('pyDone',[]);
 function renderLogic(){let a=logic[logicIndex];$('logicTitle').textContent=a[0];$('logicDesc').textContent=a[1];$('logicCode').textContent=a[2];$('logicAnswer').innerHTML='<option value="">Choisis une réponse</option>'+a[3].map((x,i)=>'<option value="'+i+'">'+x+'</option>').join('');$('logicCount').textContent='Exercice '+(logicIndex+1)+' / '+logic.length;$('logicResult').textContent=logicDone.includes(logicIndex)?'✅ Déjà réussi':'';$('logicProgress').style.width=(logicDone.length/logic.length*100)+'%';$('logicPrev').disabled=logicIndex===0;$('logicNext').disabled=logicIndex===logic.length-1}
 function renderPy(){let a=py[pyIndex];$('pyTitle').textContent=a[0];$('pyDesc').textContent=a[1];$('pyCode').textContent=a[2];$('pyPrompt').textContent=a[3];$('pyInput').value='';$('pyCount').textContent='Leçon '+(pyIndex+1)+' / '+py.length;$('pyHint').textContent='💡 '+a[6];$('pyResult').textContent=pyDone.includes(pyIndex)?'✅ Déjà réussi':'';$('pythonProgress').style.width=(pyDone.length/py.length*100)+'%';$('pyPrev').disabled=pyIndex===0;$('pyNext').disabled=pyIndex===py.length-1}
-$('logicCheck').onclick=()=>{let a=logic[logicIndex],ok=$('logicAnswer').value!==''&&Number($('logicAnswer').value)===a[4];$('logicResult').textContent=ok?'✅ Bien joué !':'❌ Regarde bien le test, puis réessaie.';if(ok&&!logicDone.includes(logicIndex)){logicDone.push(logicIndex);save('logicDone',logicDone)}renderLogic()};
+$('logicCheck').onclick=()=>{let a=logic[logicIndex],ok=$('logicAnswer').value!==''&&Number($('logicAnswer').value)===a[4];$('logicResult').textContent=ok?'✅ Bien joué !':'❌ Regarde bien le test, puis réessaie.';if(ok&&!logicDone.includes(logicIndex)){logicDone.push(logicIndex);save('logicDone',logicDone)}$('logicProgress').style.width=(logicDone.length/logic.length*100)+'%'};
 $('pyCheck').onclick=()=>{let a=py[pyIndex],v=$('pyInput').value.trim(),ok=a[5].some(answer=>v.replace(/\s+/g,'')===answer.replace(/\s+/g,''));$('pyResult').textContent=ok?'✅ Exact ! Tu peux passer à la leçon suivante.':'💡 Pas encore. '+a[6];if(ok&&!pyDone.includes(pyIndex)){pyDone.push(pyIndex);save('pyDone',pyDone);$('pythonProgress').style.width=(pyDone.length/py.length*100)+'%'}};
 $('logicPrev').onclick=()=>{logicIndex=Math.max(0,logicIndex-1);renderLogic()};
 $('logicNext').onclick=()=>{logicIndex=Math.min(logic.length-1,logicIndex+1);renderLogic()};
